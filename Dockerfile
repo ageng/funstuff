@@ -19,14 +19,16 @@ ENV LC_ALL en_US.UTF-8
 RUN curl -L https://www.opscode.com/chef/install.sh | bash
 RUN echo "gem: --no-ri --no-rdoc" > ~/.gemrc
 
-#RUN /opt/chef/embedded/bin/gem install berkshelf
-
 RUN cd /tmp ;\
     wget -O chefdk.deb https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.5.1-1_amd64.deb ;\
     dpkg -i chefdk.deb ;\
     rm -f /tmp/chefdk.deb
+# Make Chef DK the primary Ruby/Chef development environment.
+RUN echo 'eval "$(chef shell-init bash)"' >> ~/.bash_profile
 
 # Provisioning Start
+
+ADD . /chef
 
 RUN cd /chef && berks && berks vendor
 
