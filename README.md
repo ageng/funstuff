@@ -5,8 +5,9 @@ This repository contain about demo Docker with chef.
 ### How To Use
 
 ```
-$ sudo docker build -t <image_name>
-$ sudo docker run -d -p 80:80 <image_name> <commad>
+$ sudo docker build -t <image_name> .
+$ sudo docker run -p 80:80 --name <name_service> -d <image_name>
+$ docker start <name_service>
 ```
 
 ### License
