@@ -6,7 +6,12 @@ MAINTAINER ageng "me@ageng.my.id"
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -y update
-RUN apt-get -y install build-essential python libxml2-dev libxslt-dev git vim nano wget curl autoconf sudo openssh-server bas$
+RUN apt-get -y install build-essential python libxml2-dev libxslt-dev git vim nano wget curl autoconf sudo openssh-server bash-completion python-pip
+
+# Supervisor Config
+RUN /usr/bin/easy_install supervisor
+RUN /usr/bin/easy_install supervisor-stdout
+ADD ./supervisord.conf /etc/supervisord.conf
 
 # Set locale
 
@@ -36,4 +41,15 @@ RUN chef-solo -c /chef/solo.rb -j /chef/solo.json
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-CMD ["nginx"]
+RUN cp /chef/default /etc/nginx/sites-enabled/
+
+RUN mkdir /var/www/
+
+RUN cp /chef/index.php /var/www/
+
+#RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+ADD ./start.sh /start.sh
+RUN chmod 755 /start.sh
+
+CMD ["/bin/bash", "/start.sh"]
